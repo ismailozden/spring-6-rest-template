@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RequiredArgsConstructor
 @Service
@@ -21,9 +22,11 @@ public class BeerClientImpl implements BeerClient {
 
         RestTemplate restTemplate = restTemplateBuilder.build();
 
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
+
         ParameterizedTypeReference<BeerDTOPageImpl<BeerDTO>> responseType = new ParameterizedTypeReference<BeerDTOPageImpl<BeerDTO>>() {};
         ResponseEntity<BeerDTOPageImpl<BeerDTO>> response = restTemplate
-                .exchange(GET_BEER_PATH, HttpMethod.GET, null, responseType);
+                .exchange(uriComponentsBuilder.toUriString(), HttpMethod.GET, null, responseType);
 
 
         return response.getBody();

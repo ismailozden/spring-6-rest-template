@@ -2,9 +2,11 @@ package com.zdn.zdn.client;
 
 import com.zdn.zdn.model.BeerDTO;
 import com.zdn.zdn.model.BeerDTOPageImpl;
+import com.zdn.zdn.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,14 @@ public class BeerClientImpl implements BeerClient {
 
     private final RestTemplateBuilder restTemplateBuilder;
     private static final String GET_BEER_PATH = "/api/v1/beer";
+
     @Override
-    public BeerDTOPageImpl<BeerDTO> listBeers(String beerName) {
+    public Page<BeerDTO> listBeers() {
+        return this.listBeers(null,null,null,null,null);
+    }
+
+    @Override
+    public BeerDTOPageImpl<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize) {
 
         RestTemplate restTemplate = restTemplateBuilder.build();
 
@@ -27,6 +35,23 @@ public class BeerClientImpl implements BeerClient {
         if (beerName != null){
             uriComponentsBuilder.queryParam("beerName", beerName);
         }
+
+        if (beerStyle != null){
+            uriComponentsBuilder.queryParam("beerStyle", beerStyle);
+        }
+
+        if (showInventory != null){
+            uriComponentsBuilder.queryParam("showInventory", showInventory);
+        }
+
+        if (pageNumber != null){
+            uriComponentsBuilder.queryParam("pageNumber", pageNumber);
+        }
+
+        if (pageSize != null){
+            uriComponentsBuilder.queryParam("pageSize", pageSize);
+        }
+
 
         ParameterizedTypeReference<BeerDTOPageImpl<BeerDTO>> responseType = new ParameterizedTypeReference<BeerDTOPageImpl<BeerDTO>>() {};
         ResponseEntity<BeerDTOPageImpl<BeerDTO>> response = restTemplate

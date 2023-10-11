@@ -1,5 +1,6 @@
 package com.zdn.zdn.client;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.zdn.zdn.model.BeerDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -26,8 +27,14 @@ public class BeerClientImpl implements BeerClient {
 
         ResponseEntity<Map> mapResponseEntity = restTemplate.getForEntity(BASE_URL+GET_BEER_PATH, Map.class);
 
-        System.out.println(stringResponseEntity.getBody());
+        ResponseEntity<JsonNode> jsonNodeResponseEntity = restTemplate.getForEntity(BASE_URL+GET_BEER_PATH, JsonNode.class);
 
+        jsonNodeResponseEntity.getBody().findPath("content")
+                .elements().forEachRemaining(jsonNode -> {
+                    System.out.println(jsonNode.get("beerName").asText());
+                });
+
+        System.out.println(stringResponseEntity.getBody());
         return null;
     }
 }

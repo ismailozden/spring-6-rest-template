@@ -144,7 +144,7 @@ public class BeerClientMockTest {
                 .andRespond(withResourceNotFound());
         Assertions.assertThrows(HttpClientErrorException.class, () -> {
             beerClient.deleteBeer(beerDTO.getId());
-        })
+        });
         server.verify();
     }
 

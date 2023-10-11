@@ -12,6 +12,6 @@ class BeerClientImplTest {
 
     @Test
     void listBeers() {
-        beerClient.listBeers();
+        System.out.println(beerClient.listBeers());
     }
 }

@@ -11,7 +11,12 @@ class BeerClientImplTest {
     BeerClientImpl beerClient;
 
     @Test
-    void listBeers() {
-        System.out.println(beerClient.listBeers());
+    void listBeersWithName() {
+        System.out.println(beerClient.listBeers("ALE"));
+    }
+
+    @Test
+    void listBeersWithoutBeerName() {
+        beerClient.listBeers(null);
     }
 }

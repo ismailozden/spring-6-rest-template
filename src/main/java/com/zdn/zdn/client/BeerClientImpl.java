@@ -18,11 +18,15 @@ public class BeerClientImpl implements BeerClient {
     private final RestTemplateBuilder restTemplateBuilder;
     private static final String GET_BEER_PATH = "/api/v1/beer";
     @Override
-    public BeerDTOPageImpl<BeerDTO> listBeers() {
+    public BeerDTOPageImpl<BeerDTO> listBeers(String beerName) {
 
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
+
+        if (beerName != null){
+            uriComponentsBuilder.queryParam("beerName", beerName);
+        }
 
         ParameterizedTypeReference<BeerDTOPageImpl<BeerDTO>> responseType = new ParameterizedTypeReference<BeerDTOPageImpl<BeerDTO>>() {};
         ResponseEntity<BeerDTOPageImpl<BeerDTO>> response = restTemplate

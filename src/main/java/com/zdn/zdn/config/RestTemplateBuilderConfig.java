@@ -15,28 +15,23 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 @Configuration
 public class RestTemplateBuilderConfig {
 
-    private final ClientRegistrationRepository clientRegistrationRepository;
-    private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
-
     @Value("${rest.template.rootUrl}")
     String rootUrl;
 
-    public RestTemplateBuilderConfig(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService) {
-        this.clientRegistrationRepository = clientRegistrationRepository;
-        this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
-    }
-
     @Bean
-    RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer configurer){
+    RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer configurer,
+                                            OAuthClientInterceptor oAuthClientInterceptor){
 
         assert rootUrl != null;
 
         return configurer.configure(new RestTemplateBuilder())
+                .additionalInterceptors(oAuthClientInterceptor)
                         .uriTemplateHandler(new DefaultUriBuilderFactory(rootUrl));
     }
 
     @Bean
-    OAuth2AuthorizedClientManager auth2AuthorizedClientManager(){
+    OAuth2AuthorizedClientManager auth2AuthorizedClientManager
+            (ClientRegistrationRepository clientRegistrationRepository,OAuth2AuthorizedClientService oAuth2AuthorizedClientService ){
         var authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
                 .clientCredentials()
                 .build();
